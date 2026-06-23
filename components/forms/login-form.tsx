@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useRouter } from "next/navigation"; // Make sure to use 'next/navigation'
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,8 +18,11 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { LOGIN_SCHEMA } from "@/app/_scheme/auth";
+import { authClient } from "@/lib/auth-client";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"form">) {
+  const router = useRouter(); // Initialize the router
+
   const form = useForm<z.infer<typeof LOGIN_SCHEMA>>({
     resolver: zodResolver(LOGIN_SCHEMA),
     defaultValues: {
@@ -26,21 +30,23 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       password: "",
     },
   });
-  function onSubmit(data: z.infer<typeof LOGIN_SCHEMA>) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-xs overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
-    });
+  async function onSubmit(data: z.infer<typeof LOGIN_SCHEMA>) {
+    await authClient.signIn
+      .email({
+        email: data.email,
+        password: data.password,
+      })
+      .then((res) => {
+        if (res.data) {
+          toast.success("Login successful!");
+          router.push("/"); // Redirect to dashboard on successful login
+        }
+        if (res.error) {
+          toast.error(`Error: ${res.error.message}`, {
+            position: "top-right",
+          });
+        }
+      });
   }
 
   return (
