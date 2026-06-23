@@ -2,8 +2,8 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/web/Navbar";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,6 +27,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Root Layout");
   return (
     <html
       lang="en"
@@ -48,8 +49,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
-            <Navbar />
             {children}
+            <Toaster />
           </main>
         </ThemeProvider>
       </body>
