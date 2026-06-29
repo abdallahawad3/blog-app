@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-
 import BlogSection from "@/components/blogs/BlogSection";
 import BlogCardSkeleton from "@/components/blogs/BlogsSkeleton";
 

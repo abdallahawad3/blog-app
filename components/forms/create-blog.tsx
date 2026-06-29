@@ -11,12 +11,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "../ui/textarea";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { createBlogMutation } from "@/app/actions";
+import { UploadOneOrMoreImages } from "./image-upload";
+import { type FileWithPreview } from "@/hooks/use-file-upload";
 
 const CreateBlogForm = ({ className, ...props }: React.ComponentProps<"form">) => {
+  const [image, setImage] = useState<FileWithPreview>();
+  const handleFilesChange = useCallback((files: FileWithPreview[]) => {
+    setTimeout(() => {
+      setImage(files[0]);
+    }, 0);
+  }, []);
   const router = useRouter();
+
   const [isPending, setTransition] = useTransition();
   const form = useForm<z.infer<typeof CREATE_BLOG_SCHEME>>({
     resolver: zodResolver(CREATE_BLOG_SCHEME),
@@ -27,8 +36,12 @@ const CreateBlogForm = ({ className, ...props }: React.ComponentProps<"form">) =
   });
 
   function onSubmit(data: z.infer<typeof CREATE_BLOG_SCHEME>) {
+    if (!image) {
+      toast.error("Please upload an image");
+      return;
+    }
     setTransition(async function () {
-      const result = await createBlogMutation(data);
+      const result = await createBlogMutation({ ...data, image });
       if (!result.success) {
         toast.error(`Error creating blog: ${result.error}`);
         return;
@@ -36,8 +49,8 @@ const CreateBlogForm = ({ className, ...props }: React.ComponentProps<"form">) =
       toast.success("Blog created successfully");
       form.reset();
       setTimeout(() => {
-        router.push("/");
-      }, 2000);
+        router.push("/blogs");
+      }, 1000);
     });
   }
 
@@ -95,6 +108,7 @@ const CreateBlogForm = ({ className, ...props }: React.ComponentProps<"form">) =
           )}
         />
 
+        <UploadOneOrMoreImages multiple={false} onFilesChange={handleFilesChange} />
         <Field>
           <Button type="submit">
             {isPending ? (

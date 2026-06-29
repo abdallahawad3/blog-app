@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 import LogoutButton from "./logout-button";
 import { isAuthenticated } from "@/lib/auth-server"; // ← Your server auth function
+import { ModeToggle } from "@/components/theme/ModeToggle";
 
 const Navbar = async () => {
   const authenticated = await isAuthenticated(); // Server-side check
@@ -21,7 +22,7 @@ const Navbar = async () => {
           <Link className={buttonVariants({ variant: "ghost" })} href="/">
             Home
           </Link>
-          <Link className={buttonVariants({ variant: "ghost" })} href="/blog">
+          <Link className={buttonVariants({ variant: "ghost" })} href="/blogs">
             Blog
           </Link>
           <Link className={buttonVariants({ variant: "ghost" })} href="/create">
@@ -39,13 +40,12 @@ const Navbar = async () => {
             <Link className={buttonVariants({ variant: "secondary" })} href="/auth/login">
               Login
             </Link>
+            <ModeToggle />
           </>
         ) : (
           <>
-            <Link className={buttonVariants({ variant: "secondary" })} href="/dashboard">
-              Dashboard
-            </Link>
             <LogoutButton />
+            <ModeToggle />
           </>
         )}
       </div>
