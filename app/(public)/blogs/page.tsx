@@ -1,9 +1,9 @@
-import BlogSection from "@/components/blogs/BlogSection";
-import { api } from "@/convex/_generated/api";
-import { fetchQuery } from "convex/nextjs";
+import { Suspense } from "react";
 
-const BlogsPage = async () => {
-  const blogs = await fetchQuery(api.blogs.getBlogs);
+import BlogSection from "@/components/blogs/BlogSection";
+import BlogCardSkeleton from "@/components/blogs/BlogsSkeleton";
+
+const BlogsPage = () => {
   return (
     <div className="py-12">
       <div className="text-center pb-12">
@@ -14,7 +14,17 @@ const BlogsPage = async () => {
         </p>
       </div>
 
-      <BlogSection data={blogs} />
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <BlogCardSkeleton key={index} />
+            ))}
+          </div>
+        }
+      >
+        <BlogSection />
+      </Suspense>
     </div>
   );
 };
