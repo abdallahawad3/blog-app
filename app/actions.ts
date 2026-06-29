@@ -51,6 +51,7 @@ export const createBlogMutation = async (
       },
       { token },
     );
+
     return { success: true };
   } catch (error) {
     console.error("Error creating blog:", error);
