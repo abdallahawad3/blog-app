@@ -9,10 +9,8 @@ const BlogCardSkeleton = () => {
       </CardHeader>
 
       <CardContent className="px-4 py-2 space-y-3">
-        {/* Title */}
         <Skeleton className="h-6 w-4/5" />
 
-        {/* Description */}
         <Skeleton className="h-4 w-full" />
       </CardContent>
 

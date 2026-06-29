@@ -1,5 +1,5 @@
 interface IProps {
-  data: { title: string; description: string; _id: string };
+  data: { title: string; description: string; _id: string; url: string };
 }
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -8,13 +8,13 @@ import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 
 const BlogCard = ({ data }: IProps) => {
-  console.log(data.description.length, data.description);
+  console.log(data.url);
   return (
     <Card className="p-0 space-y-0">
       <CardHeader className="p-0">
         <div className="relative h-48 w-full overflow-hidden">
           <Link href={`blogs/${data._id}`}>
-            <Image className="object-cover" fill alt="This is an image" src={"/placeholder.jpg"} />
+            <Image className="object-cover" fill alt="This is an image" src={data.url} />
           </Link>
         </div>
       </CardHeader>
