@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ConvexClientProvider } from "@/components/web/ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -49,7 +50,9 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <main className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
-            <ConvexClientProvider>{children}</ConvexClientProvider>
+            <Suspense fallback={null}>
+              <ConvexClientProvider>{children}</ConvexClientProvider>
+            </Suspense>
             <Toaster />
           </main>
         </ThemeProvider>

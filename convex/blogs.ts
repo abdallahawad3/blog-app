@@ -45,3 +45,18 @@ export const generateImageUploadUrl = mutation({
     return await ctx.storage.generateUploadUrl();
   },
 });
+
+export const getBlogById = query({
+  args: { id: v.id("blogs") },
+  handler: async (ctx, { id }) => {
+    const blog = await ctx.db.get(id);
+    if (!blog) {
+      throw new ConvexError("Blog not found");
+    }
+    const blogWithUrl = {
+      ...blog,
+      ...(blog.imageStorageId ? { url: await ctx.storage.getUrl(blog.imageStorageId) } : {}),
+    };
+    return blogWithUrl;
+  },
+});
