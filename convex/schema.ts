@@ -5,6 +5,7 @@ export default defineSchema({
   blogs: defineTable({
     title: v.string(),
     description: v.string(),
+    imageStorageId: v.id("_storage"),
     authorId: v.string(),
   }),
 });
